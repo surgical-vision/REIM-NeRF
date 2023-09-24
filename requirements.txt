@@ -1,0 +1,5 @@
+mediapy
+open3d
+opencv-python
+numpy
+tqdm
