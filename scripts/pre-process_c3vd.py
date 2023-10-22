@@ -1,6 +1,6 @@
 from pathlib import Path
 import shutil
-from reimnerf.preprocessing.data import C3VD, remove_json_fames ,keep_only_json_fames
+from reimnerf.datasets.preprocessing.raw_data import C3VD, remove_json_fames ,keep_only_json_fames
 import argparse
 
 def make_parser():

@@ -1,5 +1,5 @@
 import numpy as np
-import reimnerf.preprocessing.utils as utils
+import reimnerf.datasets.preprocessing.transforms_3d as transforms_3d
 from pathlib import Path
 import cv2
 import open3d as o3d
@@ -7,11 +7,11 @@ import json
 import shutil
 from tqdm import tqdm 
 
-# generated using opencv and the provided calibration images from the dataset
+# Calibration files were generated using opencv and the provided calibration images from the C3VD dataset
 
 
 
-class SNeRFDataset():
+class ReimNeRFDataset():
 
     def load_dataset(self):
         """this functions loads , poses, images and pointclouds"""
@@ -23,7 +23,7 @@ class SNeRFDataset():
             
             pcd = o3d.geometry.PointCloud()
             # express the pointcloud in the world frame of reference
-            pcd.points = o3d.utility.Vector3dVector(utils.transform_left_ptcloud(ptc, pose))
+            pcd.points = o3d.utility.Vector3dVector(transforms_3d.transform_left_ptcloud(ptc, pose))
             # limit duplicate points. Most defiantly this needs to be done after combining 
             # the current pointcloud with the rest but we are living it like this because 
             # this is how data were generated during the paper's preparation.
@@ -105,7 +105,7 @@ class SNeRFDataset():
         """computes the transformation by which the pointcloud needs to be manipulated 
         in order to fit inside a (cube_len x cube_len x cube_len cube), positioned in the origin.
         This transformation is important because the positional encoding used will not work properly for points
-        outsite the range (-pi,pi). The default cube_len ensures that all known points are expressed
+        outside the range (-pi,pi). The default cube_len ensures that all known points are expressed
         in range (-1,1)"""
         if not self.frame_pointclouds:
             raise ValueError
@@ -113,7 +113,7 @@ class SNeRFDataset():
         points_mean = np.nanmean(self.pointcloud,axis=0)
         self.center_geom_T = np.eye(4)
         self.center_geom_T[:-1,-1]=-points_mean
-        self.pointcloud = utils.transform_left_ptcloud(self.pointcloud, self.center_geom_T)
+        self.pointcloud = transforms_3d.transform_left_ptcloud(self.pointcloud, self.center_geom_T)
 
         # scale the pointcloud to fit inside a cube with dimentions cube_len^3
         self.scale_factor = (0.5*cube_len)/np.nanmax(np.abs(self.pointcloud))
@@ -135,7 +135,7 @@ class SNeRFDataset():
             self.distmaps[i] *= self.scale_factor
 
         # transform poses based on scale factor and center transformation 
-        # not convinced about this either. why are we appling the transfrormation to c2w poses and not w2c
+        # not convinced about this either. why are we applying the transformation to c2w poses and not w2c
         self.poses = [self.center_geom_T@pose for pose in self.poses]
         for i in range(len(self.poses)):
             self.poses[i][:3,-1] *= self.scale_factor 
@@ -148,7 +148,7 @@ class SNeRFDataset():
         information. the frames field will include the relative filepath of an image, the pose 
         of an image expressed in c2w coordinates following the opengl convention
         optionally a path to distmap information.
-        This funtions assumes that the following lists and arrays are populated:
+        This function assumes that the following lists and arrays are populated:
         image_paths
         poses
         calib
@@ -254,7 +254,7 @@ class SNeRFDataset():
         cv2.imwrite(str(path), distmap)
 
 
-class C3VD(SNeRFDataset):
+class C3VD(ReimNeRFDataset):
     def __init__(self, data_path, start=0, stop=-1,step=1, undistort=False):
         self.dataset_dir = Path(data_path) 
         self.start=start
@@ -263,7 +263,7 @@ class C3VD(SNeRFDataset):
 
         self.data_dir = Path(data_path)
         self.poses_path = self.data_dir/'pose.txt'
-        self.calib_path = Path(__file__).parents[2]/'data'/'c3vd_calib.json'
+        self.calib_path = Path(__file__).parents[2]/'resources'/'c3vd_calib.json'
         assert self.calib_path.exists()
 
         self.far_bounds_scaling = 1.1
@@ -315,7 +315,7 @@ class C3VD(SNeRFDataset):
         self._combine_pointclouds()
 
     def _construct_rgb_masks(self):
-        """construct mask to ignore rgb values during optimization and evalutation"""
+        """construct mask to ignore rgb values during optimization and evaluation"""
         # img = cv2.imread(str(self.image_paths[0]))
         # self.rgb_mask = np.all(img<=5, axis=-1).astype(np.uint8)*255
         # if not self.undistort:
@@ -455,7 +455,7 @@ class C3VD(SNeRFDataset):
        
         depth = depth.astype(np.float32)
         depth = ((depth)/(2**16-1))*100
-        #handle cases where depth is missing( Frame 0232 from S1)
+        #handle cases where depth is missing
         # replace zero value with nan
         depth[depth==0]=np.nan
         assert depth.shape==(self.calib['h'], self.calib['w'])
