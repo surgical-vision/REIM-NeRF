@@ -7,7 +7,10 @@ Realistic endoscopic illumination modelling for NeRF-based data generation
 You can download a copy of the corresponding MICCAI-23 paper from [here](https://link.springer.com/chapter/10.1007/978-3-031-43996-4_51)
 
 **Important**
-Model weights for every model in the paper will be added soon. The repository contains code migrated from internal projects. Should you have any issues running the scripts or recreating results, please open an issue.
+Model weights for every model in the paper have been uploaded.
+
+pre-processed trajectory files to aid with rendering without needed to download an processed c3vd will be uploaded soon.
+The repository contains code migrated from internal projects. Should you have any issues running the scripts or recreating results, please open an issue.
 
 ### Paper's Abstract
 
@@ -112,7 +115,6 @@ processed
 
 We provide scripts to train all variants of models presented in the paper, across all C3VD sequences. This allows readers to recreate the ablation study presented in the paper.
 
-
 1. Go through all the steps of the [Data pre-processing workflow](#data pre-processing workflow) sections
 2. Modify `train_nerf.sh`, `train_nerf_depth.sh`, `train_nerf_plus_light-source.sh`, `train_reim-nerf.sh` under `REIM-NeRF/scripts/bash/c3vd/training`, by replacing the placeholder value of variable `dataset_root_dir` with the path of the root directory of the pre-processed C3VD dataset (generated in step 1).
 3. Modify the above scripts to match your system GPU resources.
@@ -124,6 +126,8 @@ We provide scripts to train all variants of models presented in the paper, acros
    - `train_reim-nerf.sh`: trains the light-source conditioned model with sparse depth supervision. This is our full model
 
 ### Rendering C3VD from trained models
+
+The provided scripts assume will work with models and trajectories downloaded using the provided scripts. Be sure to modify them to point to either your version of pre-processed C3VD or your trained models.
 
 1. Go through all the steps of the [Data pre-processing workflow](#data pre-processing workflow) sections. This is required because the rendering process relies on camera poses.
 2. Modify `inference_nerf.sh`, `inference_nerf_depth.sh`, `inference_nerf_plus_light-source.sh`, `inference_reim-nerf.sh` under `REIM-NeRF/scripts/bash/c3vd/inference`, by replacing the placeholder value of variable `sequences_root_dir` with the path of the root directory of the pre-processed C3VD dataset (generated in step 1). Furthermore, replace the `checkpoints_root_dir` with the root directory of saved models for C3VD for each of the models.

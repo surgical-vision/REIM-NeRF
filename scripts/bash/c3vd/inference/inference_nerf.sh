@@ -9,8 +9,15 @@ height=216
 model_type=nerf
 depth_ratio=0
 
+# get the absolute path of the pretrained models
+root_dir="$(readlink -m "${0}")"
+for _ in {0..4}; do
+    root_dir="$(dirname "$root_dir")"
+done
+
+checkpoints_root_dir=$root_dir/ckpts/c3vd/main_results_iter15000_w270_h216/nerf_${model_type}_${depth_ratio}
+
 sequences_root_dir=/path_to_c3vd_dataset/
-checkpoints_root_dir=/path_to_the_the_root_checkpoint_directory/
 
 for dataset_path in ${sequences_root_dir}/*
 do
