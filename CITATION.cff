@@ -1,8 +1,0 @@
-@inproceedings{psychogyios2023realistic,
-  title={Realistic Endoscopic Illumination Modeling for NeRF-Based Data Generation},
-  author={Psychogyios, Dimitrios and Vasconcelos, Francisco and Stoyanov, Danail},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  pages={535--544},
-  year={2023},
-  organization={Springer}
-}
