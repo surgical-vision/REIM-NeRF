@@ -41,7 +41,7 @@ python -m scripts/download_models.py
 We host additional files supporting the paper in UCL's research repository.
 You can download a copy of all the pre-trained models from [here](https://rdr.ucl.ac.uk/articles/model/REIM-NeRF_pretrained_models_on_C3VD/24418297)
 
-If you want to render C3VD sequences without training models, continue reading from [Render endoscopic sequences](#render-endoscopic-sequences).
+If you want to render C3VD sequences without training models, continue reading from [Render endoscopic sequences](#endering-c3vd-from-trained-models).
 
 ### Data pre-processing workflow
 
