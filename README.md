@@ -7,10 +7,11 @@ Realistic endoscopic illumination modelling for NeRF-based data generation
 You can download a copy of the corresponding MICCAI-23 paper from [here](https://link.springer.com/chapter/10.1007/978-3-031-43996-4_51)
 
 **Important**
-Model weights for every model in the paper have been uploaded.
 
-pre-processed trajectory files to aid with rendering without needed to download an processed c3vd will be uploaded soon.
-The repository contains code migrated from internal projects. Should you have any issues running the scripts or recreating results, please open an issue.
+Model weights have been added, see [ Download the pre-trained models](# download-the-pre-trained-models).
+C3VD trajectory paths to allow users to render datasets without downloading a copy of C3VD can be found under /data
+
+The repository contains code migrated from internal projects. Should you have any issues running the scripts or recreating results, please open a github issue.
 
 ### Paper's Abstract
 
