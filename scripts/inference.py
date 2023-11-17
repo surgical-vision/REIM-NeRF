@@ -24,7 +24,7 @@ def get_opts():
                         required=True,
                         help='root directory of dataset')
     parser.add_argument('--dataset_name', type=str, default='blender',
-                        choices=['blender', 'llff', 'snerf', 'snerf_json'],
+                        choices=['blender', 'llff', 'reim_json', 'reim_json_render'],
                         help='which dataset to validate')
     parser.add_argument('--scene_name', type=str, default='test',
                         help='scene name, used as output folder name')
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     kwargs = {'root_dir': args.root_dir,
               'split': args.split,
               'img_wh': tuple(args.img_wh)}
-    if args.dataset_name in ['llff','snerf']:
+    if args.dataset_name in ['llff']:
         kwargs['spheric_poses'] = args.spheric_poses
     dataset = dataset_dict[args.dataset_name](**kwargs)
 
@@ -170,14 +170,14 @@ if __name__ == "__main__":
             img_gt = rgbs.view(h, w, 3)
             psnrs += [metrics.psnr(torch.FloatTensor(img_pred), img_gt).item()]
 
-    imageio.mimsave(os.path.join(dir_name, f'{args.scene_name}.gif'), imgs, fps=args.fps)
+    imageio.mimsave(os.path.join(dir_name, f'rgb.gif'), imgs, fps=args.fps)
 
     if args.save_depth:
         min_depth = np.min(depth_maps)
         max_depth = np.max(depth_maps)
         depth_imgs = (depth_maps - np.min(depth_maps)) / (max(np.max(depth_maps) - np.min(depth_maps), 1e-8))
         depth_imgs_ = [cv2.applyColorMap((img * 255).astype(np.uint8), cv2.COLORMAP_JET) for img in depth_imgs]
-        imageio.mimsave(os.path.join(dir_name, f'{args.scene_name}_depth.gif'), depth_imgs_, fps=args.fps)
+        imageio.mimsave(os.path.join(dir_name, 'depth.gif'), depth_imgs_, fps=args.fps)
 
     if psnrs:
         mean_psnr = np.mean(psnrs)

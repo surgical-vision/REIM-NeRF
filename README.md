@@ -63,7 +63,7 @@ and based on it, generate the following:
 After downloading and extracting all datasets, your local copy directory tree should look like this:
 
     ```tree
-    c2vd_registered_videos_raw
+    c3vd_registered_videos_raw
     ├── trans_t1_a_under_review
     │   └── ...
     ├── trans_t2_b_under_review
@@ -103,7 +103,6 @@ processed
    │   ├── transforms_train.json
    │   ├── transforms_true_test.json
    │   └── transforms_val.json
-   ├── trans_t1_a_under_review
    └── ....
 ```
 
@@ -131,7 +130,7 @@ We provide scripts to train all variants of models presented in the paper, acros
 
 ### Rendering C3VD from trained models
 
-The provided scripts assume will work with models and trajectories downloaded using the provided scripts. Be sure to modify them to point to either your version of pre-processed C3VD or your trained models.
+The provided scripts assume will work with models and trajectories downloaded using the provided scripts. If you download the models and trajectory paths using the provided python script, skip steps 1 and 2, the hardcoded paths in the scripts of step 3 should work.
 
 1. Go through all the steps of the [Data pre-processing workflow](#data pre-processing workflow) sections. This is required because the rendering process relies on camera poses.
 2. Modify `inference_nerf.sh`, `inference_nerf_depth.sh`, `inference_nerf_plus_light-source.sh`, `inference_reim-nerf.sh` under `REIM-NeRF/scripts/bash/c3vd/inference`, by replacing the placeholder value of variable `sequences_root_dir` with the path of the root directory of the pre-processed C3VD dataset (generated in step 1). Furthermore, replace the `checkpoints_root_dir` with the root directory of saved models for C3VD for each of the models.

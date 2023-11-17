@@ -15,11 +15,11 @@ for _ in {0..4}; do
     root_dir="$(dirname "$root_dir")"
 done
 
-checkpoints_root_dir=$root_dir/ckpts/c3vd/main_results_iter15000_w270_h216/nerf_${model_type}_${depth_ratio}
+checkpoints_root_dir=$root_dir/ckpts/c3vd/main_results_iter15000_w270_h216/${model_type}_depth_${depth_ratio}
 
-sequences_root_dir=$data/c3vd_processed
+sequences_root_dir=${root_dir}/data/C3VD-processed/sequences
 
-for dataset_path in ${sequences_root_dir}/*
+for dataset_path in $sequences_root_dir/*
 do
     dataset_name=$(basename "$dataset_path")
     checkpoint_directory=${checkpoints_root_dir}/${dataset_name}
@@ -31,7 +31,7 @@ do
 
     python -m scripts.inference \
     --root_dir ${dataset_path} \
-    --dataset_name snerf_json \
+    --dataset_name reim_json_render \
     --img_wh ${width} ${height} --N_importance 64 \
     --variant ${model_type} \
     --save_depth \
