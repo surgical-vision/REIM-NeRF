@@ -13,10 +13,10 @@ def download_file(url):
                 f.write(chunk)
     return local_filename
 
-def main():
+def download_and_extract(URL):
     dst_dir = Path(__file__).parent.parent.absolute()
     # raise SystemError("Replace url with the one from the UCL data storage")
-    downloaded_file_path = Path(download_file('https://rdr.ucl.ac.uk/ndownloader/files/42853327'))
+    downloaded_file_path = Path(download_file(URL))
     if not downloaded_file_path.exists():
         raise SystemError("Could not download the file")
     error_msg = ''
@@ -30,6 +30,15 @@ def main():
         downloaded_file_path.unlink()
         if error_msg:
             raise SystemError(f"Could not unzip the file {error_msg}")
+        
+def download_trajectories():
+    download_and_extract('https://rdr.ucl.ac.uk/ndownloader/files/43183497')
+def download_models():
+    download_and_extract('https://rdr.ucl.ac.uk/ndownloader/files/42853327')
+    
+def main():
+    download_models()
+    # download_trajectories() // data should be accessible from git until approval is granted
     
 if __name__ == "__main__":
     main()

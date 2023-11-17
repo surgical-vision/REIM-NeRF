@@ -28,23 +28,27 @@ from previously unobserved poses with high accuracy.
 
 ## Recreating the paper's results
 
-### Download the pre-trained models
+### Download the pre-trained models and normalized C3VD sequences
 
 #### Using the provided script
 
-The following script to downloads and extracts all pretrained models used in the paper under 
-`./ckpts/c3vd/main_results_iter15000_w270_h216/`. From the root directory of the repository, run:
+The following script to downloads and extracts:
+ - all pre-trained models used in the paper under `./ckpts/c3vd/main_results_iter15000_w270_h216/`.
+ - all normalized C3VD pose sequences in the appropriate format to render C3VD data using the provided models. 
+  
+From the root directory of the repository, run:
 
 ```bash
-python -m scripts/download_models.py
+python -m scripts/download_supporting_files.py
 ```
 
 #### Download manually
 
 We host additional files supporting the paper in UCL's research repository.
 You can download a copy of all the pre-trained models from [here](https://rdr.ucl.ac.uk/articles/model/REIM-NeRF_pretrained_models_on_C3VD/24418297)
+and all normalized C3VD pose sequences from [here]() (data are uploaded to github until UCL storage approval is granted. )
 
-If you want to render C3VD sequences without training models, continue reading from [Render endoscopic sequences](#endering-c3vd-from-trained-models).
+If you want to render C3VD sequences without training models nor pre-processing C3VD, download an extract the data above either using the script or manually and continue reading from [Render endoscopic sequences](#endering-c3vd-from-trained-models).
 
 ### Data pre-processing workflow
 
