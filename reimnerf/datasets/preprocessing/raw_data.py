@@ -115,7 +115,7 @@ class ReimNeRFDataset():
         self.center_geom_T[:-1,-1]=-points_mean
         self.pointcloud = transforms_3d.transform_left_ptcloud(self.pointcloud, self.center_geom_T)
 
-        # scale the pointcloud to fit inside a cube with dimentions cube_len^3
+        # scale the pointcloud to fit inside a cube with dimensions cube_len^3
         self.scale_factor = (0.5*cube_len)/np.nanmax(np.abs(self.pointcloud))
         self.pointcloud *= self.scale_factor
 
@@ -135,7 +135,6 @@ class ReimNeRFDataset():
             self.distmaps[i] *= self.scale_factor
 
         # transform poses based on scale factor and center transformation 
-        # not convinced about this either. why are we applying the transformation to c2w poses and not w2c
         self.poses = [self.center_geom_T@pose for pose in self.poses]
         for i in range(len(self.poses)):
             self.poses[i][:3,-1] *= self.scale_factor 
@@ -255,15 +254,16 @@ class ReimNeRFDataset():
 
 
 class C3VD(ReimNeRFDataset):
-    def __init__(self, data_path, start=0, stop=-1,step=1, undistort=False):
+    def __init__(self, data_path, start=0, stop=-1,step=1, undistort=False, old_format=False):
         self.dataset_dir = Path(data_path) 
         self.start=start
         self.stop=stop
         self.step=step
+        self.old_format = old_format
 
         self.data_dir = Path(data_path)
         self.poses_path = self.data_dir/'pose.txt'
-        self.calib_path = Path(__file__).parents[2]/'resources'/'c3vd_calib.json'
+        self.calib_path = Path(__file__).parents[3]/'resources'/'c3vd_calib.json'
         assert self.calib_path.exists()
 
         self.far_bounds_scaling = 1.1
@@ -427,10 +427,12 @@ class C3VD(ReimNeRFDataset):
             # pointcloud size. 
             self.depthmaps.append(depthmap)
             self.distmaps.append(distmap)
-            # break
 
         # the loaded poses seem to be in opencv c2w format
         poses_c2w = np.loadtxt(self.poses_path, delimiter=',').reshape(-1,4,4) # poses seem to express c2w transforms
+        if not self.old_format:
+            poses_c2w = poses_c2w.transpose(0,2,1) # c3vd has changed the format of their pose file. loading poses from txt, now need to be transposed. 
+        
         self.poses = poses_c2w@np.diag((1,-1,-1,1)) #convert to opengl
 
         if self.undistort:

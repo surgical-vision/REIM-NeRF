@@ -11,7 +11,10 @@ You can download a copy of the corresponding MICCAI-23 paper from [here](https:/
 Model weights have been added, see [ Download the pre-trained models](# download-the-pre-trained-models).
 C3VD trajectory paths to allow users to render datasets without downloading a copy of C3VD can be found under /data
 
-The repository contains code migrated from internal projects. Should you have any issues running the scripts or recreating results, please open a github issue.
+C3VD updated its data and naming format. The REIM-NeRF was developed using the initial version of C3VD and therefore we follow the old naming
+convention. To allow users processing the new format of C3VD we have updated the pre-processing code to process both C3VD version and default to the latest format.
+If you have difficulties recreating the paper's results please read issue #1 of the repository
+
 
 ### Paper's Abstract
 
@@ -72,7 +75,9 @@ After downloading and extracting all datasets, your local copy directory tree sh
     │   ├── 0000_depth.tiff
     │   ├── 0000_normals.tiff
     │   ├── 0000_occlusion.png
-    │   └── ...
+    │   ├── ...
+    │   ├── coverage_mesh.obj
+    │   └── pose.txt
     └── ...
     ```
 
@@ -86,11 +91,13 @@ After downloading and extracting all datasets, your local copy directory tree sh
 
     The rest of the parameters should remain default.
 
+   By default the script is set to process the latest C3VD format ( as of 11/23). If you are using the under review version of C3VD, which was used to develop REIM-NeRF, append the above command with `--old_C3VD`. Additionally if you want to overwrite existing data add the `--overwrite` flag.
+
 After both steps are complete, the process dataset should have the following structure
 
 ```tree
 processed
-   ├── trans_t1_a_under_review
+   ├── trans_t1_a/(t1v1 for the new version or trans_t1_a_under_review)
    │   ├── images
    │   │   ├── 0000_color.png
    │   │   ├── 0001_color.png
@@ -108,7 +115,7 @@ processed
 ```
 
 - **images/**: contain a copy of the source rgb images.
-- **distmaps/**:  contain the distance maps named after the rgb image they correspond to. Note, those files are different from the detphmaps provided with the dataset and encode ray distance expressed in (0,pi) scale instead of z distance expressed in (0,100mm) scale.
+- **distmaps/**:  contain the distance maps named after the rgb image they correspond to. Note, those files are different from the depthmaps provided with the dataset and encode ray distance expressed in (0,pi) scale instead of z distance expressed in (0,100mm) scale.
 - **rgb_mask.png**: is used during both training and validation to mask out pixels in the periphery of the frames where calibration parameters are expected to be less accurate.
 - **transforms_test.json**: information for every frame, we use this to re-render video sequences
 - **transforms_train.json**: information for training frame
