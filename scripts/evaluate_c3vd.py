@@ -147,7 +147,7 @@ def main(args):
         with torch.no_grad():
             depth_se = (pred_depthmaps-ref_depthmaps)**2 # Bx1xHW
 
-            depth_mse = torch.mean(depth_se[...,mask], dim=-1)/frame_data['scene_scale'] # Bx1
+            depth_mse = torch.mean(depth_se[...,mask], dim=-1)/(frame_data['scene_scale']**2) # Bx1
 
             depth_mse_std, depth_mse_avg = torch.std_mean(depth_mse)
 
